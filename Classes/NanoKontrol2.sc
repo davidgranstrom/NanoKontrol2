@@ -47,7 +47,7 @@ NanoKontrol2 {
     assignCtls {
         ccFaders.do {|cc, i|
             var key = ("fader" ++ (i+1)).asSymbol;
-            var nk  = NK2Fader(key, cc);
+            var nk  = NK2Controller(key, cc);
             // easier incremental assignment
             faders.add(nk);
             // convenience method for accesing individual faders
@@ -56,7 +56,7 @@ NanoKontrol2 {
 
         ccKnobs.do {|cc, i|
             var key = ("knob" ++ (i+1)).asSymbol;
-            var nk  = NK2Fader(key, cc);
+            var nk  = NK2Controller(key, cc);
             knobs.add(nk);
             ctls.put(key, nk);
         };
@@ -97,35 +97,43 @@ NanoKontrol2 {
         ctls.put('cycleBtn', NK2Button('cycleBtn', ccCycleBtn));
     }
 
+    freeAll {
+        ctls.do(_.free);
+    }
+
     doesNotUnderstand {|selector ... args|
         ^ctls[selector] ?? { ^super.doesNotUnderstand(selector, args) }
     }
 }
 
-NK2Fader {
+NK2Controller {
     var key, cc;
 
     *new {|key, cc|
-        ^super.newCopyArgs(key, cc);
+        ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc);
     }
 
     onChange_ {|func|
-        MIDIdef.cc(("nk2_" ++ key).asSymbol, func, cc);
+        MIDIdef.cc(key, func, cc);
+    }
+
+    free {
+        MIDIdef.cc(key).free;
     }
 }
 
-NK2Button {
+NK2Button : NK2Controller {
     var key, cc;
     var <>onPress, <>onRelease;
 
     *new {|key, cc|
-        ^super.newCopyArgs(key, cc).init;
+        ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc).init;
     }
 
     init {
         var func = {|val|
             if (val == 127) { onPress.(val) } { onRelease.(val) }
         };
-        MIDIdef.cc(("nk2_" ++ key).asSymbol, func, cc);
+        MIDIdef.cc(key, func, cc);
     }
 }
