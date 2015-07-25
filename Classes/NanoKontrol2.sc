@@ -6,11 +6,11 @@
 
 NanoKontrol2 {
     var <faders, <knobs;
-    var <topBtns, <midBtns, <lowBtns;
+    var <sBtns, <mBtns, <rBtns;
 
     var ctls;
     var ccFaders, ccKnobs;
-    var ccTopBtns, ccMidBtns, ccLowBtns;
+    var ccSBtns, ccMBtns, ccRBtns;
     var ccTransportBtns, ccMarkerBtns, ccTrackBtns, ccCycleBtn;
 
     *new {
@@ -20,18 +20,18 @@ NanoKontrol2 {
     init {
         ctls = ();
 
-        faders  = List[];
-        knobs   = List[];
+        faders = List[];
+        knobs  = List[];
 
-        topBtns = List[];
-        midBtns = List[];
-        lowBtns = List[];
+        sBtns  = List[];
+        mBtns  = List[];
+        rBtns  = List[];
 
-        ccFaders  = (0..7);
-        ccKnobs   = (16..23);
-        ccTopBtns = (32..39);
-        ccMidBtns = (48..55);
-        ccLowBtns = (64..71);
+        ccFaders = (0..7);
+        ccKnobs  = (16..23);
+        ccSBtns  = (32..39);
+        ccMBtns  = (48..55);
+        ccRBtns  = (64..71);
 
         ccTransportBtns = [ 43, 44, 42, 41, 45 ];
         ccMarkerBtns    = [ 60, 61, 62 ];
@@ -61,24 +61,24 @@ NanoKontrol2 {
             ctls.put(key, nk);
         };
 
-        ccTopBtns.collect {|cc, i|
-            var key = ("topBtn" ++ (i+1)).asSymbol;
+        ccSBtns.collect {|cc, i|
+            var key = ("sBtn" ++ (i+1)).asSymbol;
             var nk  = NK2Button(key, cc);
-            topBtns.add(nk);
+            sBtns.add(nk);
             ctls.put(key, nk);
         };
         
-        ccMidBtns.collect {|cc, i|
-            var key = ("midBtn" ++ (i+1)).asSymbol;
+        ccMBtns.collect {|cc, i|
+            var key = ("mBtn" ++ (i+1)).asSymbol;
             var nk  = NK2Button(key, cc);
-            topBtns.add(nk);
+            mBtns.add(nk);
             ctls.put(key, nk);
         };
 
-        ccLowBtns.collect {|cc, i|
-            var key = ("lowBtn" ++ (i+1)).asSymbol;
+        ccRBtns.collect {|cc, i|
+            var key = ("rBtn" ++ (i+1)).asSymbol;
             var nk  = NK2Button(key, cc);
-            topBtns.add(nk);
+            rBtns.add(nk);
             ctls.put(key, nk);
         };
 
