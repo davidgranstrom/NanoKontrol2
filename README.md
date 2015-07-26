@@ -3,6 +3,11 @@ NanoKontrol2
 
 Interface for using Korg NanoKONTROL2 with SuperCollider. This class is essentially just a rewrite of [jesusgollonet/NanoKontrol.sc](https://github.com/jesusgollonet/NanoKontrol.sc)
 
+NOTE
+----
+
+Controller names may change until this project has reached v.1.0. (current version is 1.0alpha)
+
 Interface
 ---------
 
