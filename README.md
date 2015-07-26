@@ -8,60 +8,6 @@ NOTE
 
 Controller names may change until this project has reached v.1.0. (current version is 1.0alpha)
 
-Interface
----------
-
-### Methods
-
-`onChange` all controls (faders/knobs/buttons) can register a function using this method
-
-`onPress` only register press on buttons
-
-`onRelease` only register release on buttons
-
-`free` unregisters a MIDI responder
-
-`freeAll` unregisters all MIDI responders
-
-*Note: `Cmd-.` removes all MIDI responders by default*
-
-### Controller names
-
-All controls on the NanoKONTROL2 are supported, see list of names below.
-
-#### Faders/Knobs
-
-* `fader1 .. 8`
-* `knob1 .. 8`
-
-#### Buttons
-
-* `sBtn1 .. 8`
-* `mBtn1 .. 8`
-* `rBtn1 .. 8`
-
-#### Transport buttons
-
-* `bwBtn`
-* `fwdBtn` 
-* `stopBtn` 
-* `playBtn` 
-* `recBtn`
-* `markerSetBtn` 
-* `markerBwBtn` 
-* `markerFwdBtn` 
-* `trackBwBtn`
-* `trackFwdBtn` 
-* `cycleBtn`
-
-#### Collections
-
-* `faders`
-* `knobs`
-* `sBtns`
-* `mBtns`
-* `rBtns`
-
 Basic usage
 -----------
 
@@ -118,4 +64,59 @@ n.faders[..3].do {|fader, i|
     }
 };
 ```
+
+Interface
+---------
+
+### Methods
+
+`onChange` all controls (faders/knobs/buttons) can register a function using this method
+
+`onPress` only register press on buttons
+
+`onRelease` only register release on buttons
+
+`free` unregisters a MIDI responder
+
+`freeAll` unregisters all MIDI responders
+
+*Note: `Cmd-.` removes all MIDI responders by default*
+
+### Controller names
+
+All controls on the NanoKONTROL2 are supported, see list of names below.
+
+#### Faders/Knobs
+
+* `fader1 .. 8`
+* `knob1 .. 8`
+
+#### Buttons
+
+* `sBtn1 .. 8`
+* `mBtn1 .. 8`
+* `rBtn1 .. 8`
+
+#### Transport buttons
+
+* `bwBtn`
+* `fwdBtn` 
+* `stopBtn` 
+* `playBtn` 
+* `recBtn`
+* `markerSetBtn` 
+* `markerBwBtn` 
+* `markerFwdBtn` 
+* `trackBwBtn`
+* `trackFwdBtn` 
+* `cycleBtn`
+
+#### Collections
+
+* `faders`
+* `knobs`
+* `sBtns`
+* `mBtns`
+* `rBtns`
+
 
