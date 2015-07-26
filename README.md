@@ -13,7 +13,7 @@ Interface
 
 ### Methods
 
-`onChange` all controls (faders/knobs/buttons) can assign a function to this method
+`onChange` all controls (faders/knobs/buttons) can register a function using this method
 
 `onPress` only register press on buttons
 
