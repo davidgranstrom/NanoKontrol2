@@ -50,7 +50,7 @@ NanoKontrol2 {
             var nk  = NK2Controller(key, cc);
             // easier incremental assignment
             faders.add(nk);
-            // convenience method for accesing individual faders
+            // convenience method for accessing individual faders
             ctls.put(key, nk);
         };
 
