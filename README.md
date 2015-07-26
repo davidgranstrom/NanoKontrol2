@@ -23,6 +23,8 @@ Interface
 
 `freeAll` unregisters all MIDI responders
 
+*Note: `Cmd-.` removes all MIDI responders by default*
+
 ### Controller names
 
 All controls on the NanoKONTROL2 are supported, see list of names below.
