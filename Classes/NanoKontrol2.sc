@@ -1,21 +1,22 @@
 // ===========================================================================
 // Title         : NanoKontrol2
 // Description   : Controller class for Korg NanoKONTROL2
-// Version       : 1.0alpha
-// Copyright (c) : David Granström 2015 
+// Version       : 1.1
+// Copyright (c) : David Granström 2015-2016
 // ===========================================================================
 
 NanoKontrol2 {
     var <faders, <knobs;
     var <sBtns, <mBtns, <rBtns;
+    var <>ledMode;
 
-    var ctls;
+    var ctls, midiOut;
     var ccFaders, ccKnobs;
     var ccSBtns, ccMBtns, ccRBtns;
     var ccTransportBtns, ccMarkerBtns, ccTrackBtns, ccCycleBtn;
 
-    *new {
-        ^super.new.init;
+    *new {|ledMode=\internal|
+        ^super.new.ledMode_(ledMode).init;
     }
 
     init {
@@ -42,6 +43,11 @@ NanoKontrol2 {
         MIDIClient.init;
         MIDIIn.connectAll;
 
+        if(ledMode == \external) {
+            // Device/Port name might have to be edited to match your setup.
+            midiOut = MIDIOut.newByName("nanoKONTROL2", "CTRL");
+        };
+
         this.assignCtls;
     }
 
@@ -64,42 +70,46 @@ NanoKontrol2 {
 
         ccSBtns.collect {|cc, i|
             var key = ("sBtn" ++ (i+1)).asSymbol;
-            var nk  = NK2Button(key, cc);
+            var nk  = NK2Button(key, cc, midiOut);
             sBtns.add(nk);
             ctls.put(key, nk);
         };
-        
+
         ccMBtns.collect {|cc, i|
             var key = ("mBtn" ++ (i+1)).asSymbol;
-            var nk  = NK2Button(key, cc);
+            var nk  = NK2Button(key, cc, midiOut);
             mBtns.add(nk);
             ctls.put(key, nk);
         };
 
         ccRBtns.collect {|cc, i|
             var key = ("rBtn" ++ (i+1)).asSymbol;
-            var nk  = NK2Button(key, cc);
+            var nk  = NK2Button(key, cc, midiOut);
             rBtns.add(nk);
             ctls.put(key, nk);
         };
 
         [ [ 'bwBtn', 'fwdBtn', 'stopBtn', 'playBtn', 'recBtn' ], ccTransportBtns ].flopWith {|key, cc|
-            ctls.put(key, NK2Button(key, cc));
+            ctls.put(key, NK2Button(key, cc, midiOut));
         };
 
         [ [ 'markerSetBtn', 'markerBwBtn', 'markerFwdBtn' ], ccMarkerBtns ].flopWith {|key, cc|
-            ctls.put(key, NK2Button(key, cc));
+            ctls.put(key, NK2Button(key, cc, midiOut));
         };
 
         [ [ 'trackBwBtn', 'trackFwdBtn' ], ccTrackBtns ].flopWith {|key, cc|
-            ctls.put(key, NK2Button(key, cc));
+            ctls.put(key, NK2Button(key, cc, midiOut));
         };
 
-        ctls.put('cycleBtn', NK2Button('cycleBtn', ccCycleBtn));
+        ctls.put('cycleBtn', NK2Button('cycleBtn', ccCycleBtn, midiOut));
     }
 
     freeAll {
         ctls.do(_.free);
+    }
+
+    ledsOff {
+        ctls.do(_.ledOff);
     }
 
     doesNotUnderstand {|selector ... args|
@@ -108,7 +118,7 @@ NanoKontrol2 {
 }
 
 NK2Controller {
-    var key, cc;
+    var key, cc, midiOut;
 
     *new {|key, cc|
         ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc);
@@ -118,23 +128,44 @@ NK2Controller {
         MIDIdef.cc(key, func, cc);
     }
 
+    ledOff {
+        midiOut !? {
+            midiOut.control(0, cc, 0);
+        };
+    }
+
     free {
         MIDIdef.cc(key).free;
+        this.ledOff;
     }
 }
 
 NK2Button : NK2Controller {
     var key, cc;
-    var <>onPress, <>onRelease;
+    var <>onPress, <>onRelease, state = 0;
 
-    *new {|key, cc|
-        ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc).init;
+    *new {|key, cc, aMidiOut|
+        ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc, aMidiOut).init;
+    }
+
+    ledState {
+        ^state;
+    }
+
+    ledState_ {|val|
+        val   = val.clip(0, 1);
+        state = val;
+
+        midiOut !? {
+            midiOut.control(0, cc, 127 * val);
+        };
     }
 
     init {
         var func = {|val|
-            if (val == 127) { onPress.(val) } { onRelease.(val) }
+            if (val == 127) { onPress.(val, this) } { onRelease.(val, this) }
         };
+
         MIDIdef.cc(key, func, cc);
     }
 }
