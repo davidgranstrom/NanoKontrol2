@@ -3,10 +3,39 @@ NanoKontrol2
 
 Interface for using Korg NanoKONTROL2 with SuperCollider. This class is essentially just a rewrite of [jesusgollonet/NanoKontrol.sc](https://github.com/jesusgollonet/NanoKontrol.sc)
 
-NOTE
+News
 ----
 
-Controller names may change until this project has reached v.1.0. (current version is 1.0alpha)
+Be able to control button LED's with MIDI.
+
+```
+(
+// Use \external to enable LED control.
+// Remember to set "LED mode" in Korg Kontrol Editor to "external"
+n = NanoKontrol2(\external);
+
+// turn on leds
+n.rBtns.do {|btn|
+    btn.ledState = 1;
+};
+
+n.mBtns.do {|btn|
+    btn.ledState = 1;
+};
+
+n.sBtns.do {|btn|
+    btn.ledState = 1;
+};
+)
+
+n.ledsOff; // turn leds off
+
+// the button is passed as an argument for `onPress` and `onRelease`
+n.rBtn1.onPress = {|val, btn|
+    btn.ledState = 1;
+};
+
+```
 
 Basic usage
 -----------
