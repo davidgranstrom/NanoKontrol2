@@ -119,6 +119,7 @@ NanoKontrol2 {
 
 NK2Controller {
     var key, cc, midiOut;
+    var state = 0;
 
     *new {|key, cc|
         ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc);
@@ -131,6 +132,7 @@ NK2Controller {
     ledOff {
         midiOut !? {
             midiOut.control(0, cc, 0);
+            state = 0;
         };
     }
 
@@ -142,7 +144,6 @@ NK2Controller {
 
 NK2Button : NK2Controller {
     var key, cc;
-    var state = 0;
 
     *new {|key, cc, aMidiOut|
         ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc, aMidiOut);
