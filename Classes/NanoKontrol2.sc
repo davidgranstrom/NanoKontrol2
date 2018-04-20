@@ -1,8 +1,8 @@
 // ===========================================================================
 // Title         : NanoKontrol2
 // Description   : Controller class for Korg NanoKONTROL2
-// Version       : 1.1
-// Copyright (c) : David Granström 2015-2016
+// Version       : 1.2
+// Copyright (c) : David Granström 2015
 // ===========================================================================
 
 NanoKontrol2 {
