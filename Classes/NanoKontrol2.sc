@@ -1,8 +1,8 @@
 // ===========================================================================
 // Title         : NanoKontrol2
 // Description   : Controller class for Korg NanoKONTROL2
-// Version       : 1.1
-// Copyright (c) : David Granström 2015-2016
+// Version       : 1.2
+// Copyright (c) : David Granström 2015
 // ===========================================================================
 
 NanoKontrol2 {
@@ -119,6 +119,7 @@ NanoKontrol2 {
 
 NK2Controller {
     var key, cc, midiOut;
+    var state = 0;
 
     *new {|key, cc|
         ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc);
@@ -131,6 +132,7 @@ NK2Controller {
     ledOff {
         midiOut !? {
             midiOut.control(0, cc, 0);
+            state = 0;
         };
     }
 
@@ -142,10 +144,25 @@ NK2Controller {
 
 NK2Button : NK2Controller {
     var key, cc;
-    var <>onPress, <>onRelease, state = 0;
 
     *new {|key, cc, aMidiOut|
-        ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc, aMidiOut).init;
+        ^super.newCopyArgs(("nk2_" ++ key).asSymbol, cc, aMidiOut);
+    }
+
+    onPress_ {|func|
+        MIDIdef.cc(key, {|val|
+            if (val == 127) {
+                func.(val, this)
+            }
+        }, cc);
+    }
+
+    onRelease_ {|func|
+        MIDIdef.cc(key, {|val|
+            if (val == 0) {
+                func.(val, this)
+            }
+        }, cc);
     }
 
     ledState {
@@ -159,13 +176,5 @@ NK2Button : NK2Controller {
         midiOut !? {
             midiOut.control(0, cc, 127 * val);
         };
-    }
-
-    init {
-        var func = {|val|
-            if (val == 127) { onPress.(val, this) } { onRelease.(val, this) }
-        };
-
-        MIDIdef.cc(key, func, cc);
     }
 }
