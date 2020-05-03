@@ -150,7 +150,7 @@ NK2Button : NK2Controller {
     }
 
     onPress_ {|func|
-        MIDIdef.cc(key ++ \On, {|val|
+        MIDIdef.cc((key ++ "_on").asSymbol, {|val|
             if (val == 127) {
                 func.(val, this)
             }
@@ -158,7 +158,7 @@ NK2Button : NK2Controller {
     }
 
     onRelease_ {|func|
-        MIDIdef.cc(key ++ \Off, {|val|
+        MIDIdef.cc((key ++ "_off").asSymbol, {|val|
             if (val == 0) {
                 func.(val, this)
             }
