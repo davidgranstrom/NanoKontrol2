@@ -9,7 +9,7 @@ Basic usage
 ```
 n = NanoKontrol2();
 
-// register a function to be evaluted when fader1 is changed
+// register a function to be evaluated when fader1 is changed
 n.fader1.onChange = {|val| (val/127).postln; }
 
 // overwrite the previous assignment
